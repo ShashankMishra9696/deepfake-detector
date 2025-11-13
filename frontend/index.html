@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deepfake Image Detector</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Deepfake Image Detector 🔍</h1>
+      <p class="subtitle">Upload an image and the model will predict how likely it is to be a deepfake.</p>
+    </header>
+
+    <main>
+      <section class="uploader-card">
+        <div id="dropzone" class="dropzone">
+          <input id="fileInput" type="file" accept="image/*" hidden>
+          <div class="dz-content">
+            <img src="" id="thumb" alt="" class="thumb hidden">
+            <div id="dz-text">
+              <strong>Drag & drop an image</strong>
+              <span>or <button id="chooseBtn" class="link-btn">choose a file</button></span>
+              <small id="fileInfo" class="muted"></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <label class="setting">
+            <span>Resize before send</span>
+            <select id="resizeSelect">
+              <option value="0">No resize (send original)</option>
+              <option value="512">512px (max side)</option>
+              <option value="800">800px (max side)</option>
+            </select>
+          </label>
+
+          <label class="setting">
+            <span>Compression</span>
+            <select id="qualitySelect">
+              <option value="0.95">95% (high)</option>
+              <option value="0.8">80% (default)</option>
+              <option value="0.6">60%</option>
+            </select>
+          </label>
+
+          <button id="analyzeBtn" class="primary" disabled>Analyze image</button>
+        </div>
+      </section>
+
+      <section id="resultSection" class="result-card hidden">
+        <h2>Results</h2>
+        <div class="result-body">
+          <div class="image-wrap">
+            <img id="resultImage" alt="">
+          </div>
+
+          <div class="score-wrap">
+            <div class="score">
+              <div class="score-num" id="scoreNum">—</div>
+              <div class="score-label" id="scoreLabel">No result yet</div>
+            </div>
+
+            <div id="explanation" class="explanation muted">The model will return a probability (0–100%) and an explanation if available.</div>
+
+            <div class="meta">
+              <div><strong>Model:</strong> <span id="modelName">Not connected</span></div>
+              <div><strong>Inference time:</strong> <span id="inferenceTime">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button id="downloadReportBtn" class="secondary">Download report (JSON)</button>
+          <button id="resetBtn" class="link-btn">Analyze another</button>
+        </div>
+      </section>
+
+      <section class="settings-card">
+        <h3>API Settings</h3>
+        <div class="settings-grid">
+          <label>
+            <span>Prediction endpoint</span>
+            <input id="apiUrl" type="text" placeholder="http://localhost:3000/predict">
+          </label>
+
+          <label>
+            <span>API Key (optional)</span>
+            <input id="apiKey" type="text" placeholder="Bearer token or key (optional)">
+          </label>
+
+          <label>
+            <span>Request mode</span>
+            <select id="requestMode">
+              <option value="multipart">multipart/form-data (file upload)</option>
+              <option value="base64">application/json (base64)</option>
+            </select>
+          </label>
+
+          <div class="hint muted">
+            Tip: Leave endpoint blank to use the included mock backend at <code>/predict</code>.
+          </div>
+        </div>
+      </section>
+
+      <section class="logs-card">
+        <h3>Activity log</h3>
+        <pre id="log" class="log">Ready.</pre>
+      </section>
+    </main>
+
+    <footer>
+      <small>Frontend demo • Ready to integrate with your model. Made for local development.</small>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

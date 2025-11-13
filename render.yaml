@@ -1,0 +1,30 @@
+# render.yaml - Render IaC for frontend (static site) + backend (web service)
+version: 1
+services:
+  - type: static_site
+    name: deepfake-frontend
+    env: static
+    repo: <your-git-repo>            # replace with your repo URL or remove if created via UI
+    branch: main                     # change if your default branch is different
+    root: frontend
+    buildCommand: ""                 # empty if static HTML; set if you have a build step
+    publishPath: "."                 # for plain static files in frontend/
+    plan: free
+    envVars:                           # optional runtime environment variables for build
+      - key: REACT_APP_BACKEND_URL
+        value: ""                      # or set at render-time
+
+  - type: web_service
+    name: deepfake-backend
+    env: node
+    repo: <your-git-repo>            # replace with your repo URL or remove if created via UI
+    branch: main
+    root: backend
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    plan: free
+    envVars:
+      - key: MODEL_NAME
+        value: "your-production-model"
+      - key: FRONTEND_ORIGIN
+        value: "https://<deepfake-frontend>.onrender.com"  # set after frontend is live
