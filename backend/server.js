@@ -21,6 +21,15 @@ app.get('/', (req, res) => res.type('text').send('Deepfake backend is running. U
 app.get('/health', (req, res) => res.json({ ok: true, env: process.env.NODE_ENV || 'development', timestamp: Date.now() }));
 
 app.post('/predict', upload.single('image'), async (req, res) => {
+  // --- LOGGING ADDED HERE ---
+  console.log('>>> /predict hit - headers:', {
+    length: req.headers['content-length'],
+    type: req.headers['content-type'],
+    ip: req.ip
+  });
+  console.log('>>> /predict - file present?', !!req.file, 'body keys:', Object.keys(req.body || {}));
+  // --------------------------
+
   try {
     let imageBuffer = null;
     let filename = 'upload.jpg';
