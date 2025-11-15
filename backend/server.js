@@ -1,8 +1,4 @@
 // backend/server.js
-// Minimal Express backend with /health and /predict routes
-// Accepts multipart (field "image") or JSON { image_base64: ... }
-// NOTE: replace mock inference with your real model when ready
-
 const express = require('express');
 const multer = require('multer');
 const bodyParser = require('body-parser');
@@ -11,7 +7,6 @@ const cors = require('cors');
 const app = express();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 * 1024 * 1024 } });
 
-// CORS: allow your frontend origin via env var FRONTEND_ORIGIN (recommended)
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
 app.use(cors({
   origin: FRONTEND_ORIGIN === '*' ? true : FRONTEND_ORIGIN,
@@ -22,11 +17,9 @@ app.use(cors({
 app.use(bodyParser.json({ limit: '30mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Simple root and health endpoints
 app.get('/', (req, res) => res.type('text').send('Deepfake backend is running. Use POST /predict'));
 app.get('/health', (req, res) => res.json({ ok: true, env: process.env.NODE_ENV || 'development', timestamp: Date.now() }));
 
-// Predict endpoint
 app.post('/predict', upload.single('image'), async (req, res) => {
   try {
     let imageBuffer = null;
@@ -43,13 +36,11 @@ app.post('/predict', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'No image received. Send multipart "image" or JSON "image_base64".' });
     }
 
-    // ---------- MOCK INFERENCE ----------
-    // Replace this with your model call.
+    // MOCK inference — replace with your model call
     const now = Date.now();
     const pseudo = (imageBuffer.length % 97 + (now % 1000) / 1000) / 100.0;
     const score = Math.min(Math.max(pseudo, 0), 1);
     const label = score > 0.6 ? 'deepfake' : (score > 0.35 ? 'suspicious' : 'real');
-    // -------------------------------------
 
     return res.json({
       model: process.env.MODEL_NAME || 'mock-deepfake-v1',
@@ -58,9 +49,7 @@ app.post('/predict', upload.single('image'), async (req, res) => {
         label: label,
         explanation: `Mock: bytes=${imageBuffer.length}, score≈${score.toFixed(3)}`
       },
-      meta: {
-        received_bytes: imageBuffer.length
-      }
+      meta: { received_bytes: imageBuffer.length }
     });
   } catch (err) {
     console.error('Predict error:', err);
@@ -68,6 +57,5 @@ app.post('/predict', upload.single('image'), async (req, res) => {
   }
 });
 
-// Start server (use Render's PORT env var)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Backend listening on port ${PORT}`));
