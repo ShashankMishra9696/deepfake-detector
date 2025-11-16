@@ -4,7 +4,7 @@ services:
   - type: static_site
     name: deepfake-frontend
     env: static
-    repo: <your-git-repo>            # replace with your repo URL or remove if created via UI
+    repo: https://github.com/ShashankMishra9696/deepfake-detector            # replace with your repo URL or remove if created via UI
     branch: main                     # change if your default branch is different
     root: frontend
     buildCommand: ""                 # empty if static HTML; set if you have a build step
