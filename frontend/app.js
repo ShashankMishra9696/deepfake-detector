@@ -210,9 +210,20 @@ resetBtn.addEventListener('click', ()=>{
   log('Reset UI');
 });
 
+// /* initial UI state */
+// (function init(){
+//   apiUrlInput.value = 'http://localhost:3000/predict';
+//   requestMode.value = 'multipart';
+//   resizeSelect.value = '0';
+//   qualitySelect.value = '0.8';
+//   log('UI ready');
+// })();
+
+
 /* initial UI state */
 (function init(){
-  apiUrlInput.value = 'http://localhost:3000/predict';
+  // use a relative endpoint so the UI works when served from the same origin
+  apiUrlInput.value = '/predict';
   requestMode.value = 'multipart';
   resizeSelect.value = '0';
   qualitySelect.value = '0.8';
